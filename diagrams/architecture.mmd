@@ -1,0 +1,64 @@
+flowchart LR
+    %% PawPal+ Care Coach -- architecture. Matches care_coach/*.py, coach.py, app.py, run_eval.py.
+    %% Solid arrows = data flow. The two human checkpoints and the two automated safety nets are highlighted.
+
+    U([Owner types a request<br/>CLI: coach.py  /  UI: app.py]):::human
+
+    subgraph G1[guardrails.py - runs BEFORE planning]
+        direction TB
+        S[sanitize: strip control chars,<br/>drop instruction-like text,<br/>length limit 1000]
+        E{emergency words?<br/>dose question?}
+    end
+
+    P[parser.py<br/>name, species, age to stage,<br/>conditions, free hours]
+    C{check_request:<br/>species known and supported?<br/>hours unambiguous?}
+
+    OUT1[/escalate: call a vet now<br/>refuse: no doses<br/>clarify: ask owner a question/]:::stop
+
+    subgraph KB[Knowledge base - knowledge/*.md, loaded by knowledge.py]
+        direction LR
+        K1[dog / cat / rabbit care]
+        K2[health and safety]
+        K3[scheduling principles<br/>check: rules]
+        K4[custom/ owner notes<br/>pet-scoped]
+    end
+
+    R[retriever.py<br/>metadata filter: species, stage,<br/>condition, pet name<br/>then BM25 per care topic<br/>+ owner notes always included]
+
+    subgraph AGENT[planner.py - CareCoach.plan  works on a SANDBOX COPY of the owner]
+        direction TB
+        D[Draft: one occurrence per rule window<br/>best chunk per rule key wins<br/>owner note beats condition beats stage beats species]
+        SC[Schedule: first free slot in window<br/>using PawPal+ Scheduler:<br/>no overlaps, caregiver available]
+        CR{Critic: apply retrieved check: rules<br/>meal spacing, exercise after meal}
+        RV[Revise: tighten the window<br/>and re-place the task<br/>max 3 rounds]
+        SCORE[Confidence score<br/>needs_review if a high-priority task<br/>is unplaced or a rule is unresolved]
+    end
+
+    EX[explain.py<br/>template explanation with citations<br/>optional LLM rewording,<br/>rejected if a citation is not retrieved]
+
+    H{Human approves?}:::human
+    A[apply_plan: the ONLY writer<br/>idempotent, adds pet and caregiver<br/>if missing]
+    DATA[(PawPal+ Owner<br/>pawpal_system.py<br/>data.json)]
+
+    LOG[(logs/coach.log<br/>agent trace)]
+    EV[run_eval.py + evaluation.py<br/>21 cases, invariants, determinism,<br/>apply idempotence, baseline comparison]:::test
+    T[pytest: 108 tests<br/>tests/test_pawpal.py + tests/test_care_coach.py]:::test
+
+    U --> S --> E
+    E -- yes --> OUT1
+    E -- no --> P --> C
+    C -- no --> OUT1
+    C -- yes --> R
+    KB --> R
+    R --> D --> SC --> CR
+    CR -- violation --> RV --> SC
+    CR -- none left --> SCORE --> EX --> H
+    H -- yes --> A --> DATA
+    H -- no, discard --> NOP([nothing is changed]):::stop
+    AGENT -. every step .-> LOG
+    EV -. runs .-> U
+    T -. tests .-> AGENT
+
+    classDef human fill:#fff4d6,stroke:#b8860b,stroke-width:2px;
+    classDef stop fill:#fde2e2,stroke:#b22222,stroke-width:2px;
+    classDef test fill:#e3f1e3,stroke:#2e7d32,stroke-width:1px,stroke-dasharray: 4 3;

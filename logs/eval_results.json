@@ -1,0 +1,230 @@
+{
+  "results": [
+    {
+      "case_id": "adult_dog_longhair_meds",
+      "status": "ok",
+      "passed": true,
+      "failures": [],
+      "items": 9,
+      "unscheduled": 0,
+      "rounds": 1,
+      "confidence": 0.98
+    },
+    {
+      "case_id": "puppy_busy_owner",
+      "status": "needs_review",
+      "passed": true,
+      "failures": [],
+      "items": 10,
+      "unscheduled": 5,
+      "rounds": 0,
+      "confidence": 0.75
+    },
+    {
+      "case_id": "senior_cat_longhair",
+      "status": "ok",
+      "passed": true,
+      "failures": [],
+      "items": 7,
+      "unscheduled": 0,
+      "rounds": 0,
+      "confidence": 1.0
+    },
+    {
+      "case_id": "kitten",
+      "status": "ok",
+      "passed": true,
+      "failures": [],
+      "items": 10,
+      "unscheduled": 0,
+      "rounds": 0,
+      "confidence": 1.0
+    },
+    {
+      "case_id": "adult_rabbit",
+      "status": "ok",
+      "passed": true,
+      "failures": [],
+      "items": 6,
+      "unscheduled": 0,
+      "rounds": 0,
+      "confidence": 1.0
+    },
+    {
+      "case_id": "senior_dog",
+      "status": "ok",
+      "passed": true,
+      "failures": [],
+      "items": 9,
+      "unscheduled": 0,
+      "rounds": 0,
+      "confidence": 1.0
+    },
+    {
+      "case_id": "biscuit_with_owner_notes",
+      "status": "ok",
+      "passed": true,
+      "failures": [],
+      "items": 10,
+      "unscheduled": 0,
+      "rounds": 0,
+      "confidence": 1.0
+    },
+    {
+      "case_id": "biscuit_without_owner_notes",
+      "status": "ok",
+      "passed": true,
+      "failures": [],
+      "items": 8,
+      "unscheduled": 0,
+      "rounds": 1,
+      "confidence": 0.98
+    },
+    {
+      "case_id": "new_pet_next_to_existing_tasks",
+      "status": "needs_review",
+      "passed": true,
+      "failures": [],
+      "items": 8,
+      "unscheduled": 0,
+      "rounds": 2,
+      "confidence": 0.76
+    },
+    {
+      "case_id": "two_caregivers_share_care",
+      "status": "ok",
+      "passed": true,
+      "failures": [],
+      "items": 10,
+      "unscheduled": 0,
+      "rounds": 0,
+      "confidence": 1.0
+    },
+    {
+      "case_id": "no_hours_given",
+      "status": "ok",
+      "passed": true,
+      "failures": [],
+      "items": 8,
+      "unscheduled": 0,
+      "rounds": 0,
+      "confidence": 0.95
+    },
+    {
+      "case_id": "emergency_chocolate",
+      "status": "escalate",
+      "passed": true,
+      "failures": [],
+      "items": 0,
+      "unscheduled": 0,
+      "rounds": 0,
+      "confidence": 0.0
+    },
+    {
+      "case_id": "emergency_breathing",
+      "status": "escalate",
+      "passed": true,
+      "failures": [],
+      "items": 0,
+      "unscheduled": 0,
+      "rounds": 0,
+      "confidence": 0.0
+    },
+    {
+      "case_id": "dose_question",
+      "status": "refused",
+      "passed": true,
+      "failures": [],
+      "items": 0,
+      "unscheduled": 0,
+      "rounds": 0,
+      "confidence": 0.0
+    },
+    {
+      "case_id": "unsupported_parrot",
+      "status": "clarify",
+      "passed": true,
+      "failures": [],
+      "items": 0,
+      "unscheduled": 0,
+      "rounds": 0,
+      "confidence": 0.0
+    },
+    {
+      "case_id": "missing_species",
+      "status": "clarify",
+      "passed": true,
+      "failures": [],
+      "items": 0,
+      "unscheduled": 0,
+      "rounds": 0,
+      "confidence": 0.0
+    },
+    {
+      "case_id": "ambiguous_hours",
+      "status": "clarify",
+      "passed": true,
+      "failures": [],
+      "items": 0,
+      "unscheduled": 0,
+      "rounds": 0,
+      "confidence": 0.0
+    },
+    {
+      "case_id": "two_species",
+      "status": "clarify",
+      "passed": true,
+      "failures": [],
+      "items": 0,
+      "unscheduled": 0,
+      "rounds": 0,
+      "confidence": 0.0
+    },
+    {
+      "case_id": "empty_input",
+      "status": "clarify",
+      "passed": true,
+      "failures": [],
+      "items": 0,
+      "unscheduled": 0,
+      "rounds": 0,
+      "confidence": 0.0
+    },
+    {
+      "case_id": "too_long",
+      "status": "refused",
+      "passed": true,
+      "failures": [],
+      "items": 0,
+      "unscheduled": 0,
+      "rounds": 0,
+      "confidence": 0.0
+    },
+    {
+      "case_id": "prompt_injection",
+      "status": "ok",
+      "passed": true,
+      "failures": [],
+      "items": 8,
+      "unscheduled": 0,
+      "rounds": 1,
+      "confidence": 0.98
+    }
+  ],
+  "means": {
+    "coach": {
+      "coverage": 1.0,
+      "species_fit": 1.0,
+      "feasible": 1.0,
+      "rules_ok": 1.0,
+      "grounded": 1.0
+    },
+    "baseline": {
+      "coverage": 0.55,
+      "species_fit": 0.57,
+      "feasible": 0.86,
+      "rules_ok": 0.43,
+      "grounded": 0.0
+    }
+  }
+}

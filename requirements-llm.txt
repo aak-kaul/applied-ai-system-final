@@ -1,0 +1,2 @@
+# OPTIONAL: only for `python coach.py --llm`. The graded runs and all tests work without it.
+anthropic>=0.40

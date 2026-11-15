@@ -6,6 +6,55 @@
       "species": "dog",
       "age": 1,
       "notes": "Loves to go on walks!",
+      "tasks": [
+        {
+          "description": "Morning walk",
+          "due_time": "08:00",
+          "duration_mins": 30,
+          "frequency": "Once",
+          "priority": "medium",
+          "category": "walk",
+          "due_date": "2026-11-15",
+          "assigned_to": null,
+          "pet_name": "Sammy",
+          "is_completed": false,
+          "task_id": "e854a475"
+        }
+      ]
+    },
+    {
+      "name": "Arii",
+      "species": "dog",
+      "age": 12,
+      "notes": "",
+      "tasks": []
+    },
+    {
+      "name": "wedew",
+      "species": "dog",
+      "age": 2,
+      "notes": "",
+      "tasks": []
+    },
+    {
+      "name": "wen",
+      "species": "dog",
+      "age": 1,
+      "notes": "",
+      "tasks": []
+    },
+    {
+      "name": "Sam",
+      "species": "cat",
+      "age": 15,
+      "notes": "",
+      "tasks": []
+    },
+    {
+      "name": "Ron",
+      "species": "rabbit",
+      "age": 10,
+      "notes": "",
       "tasks": []
     }
   ],
