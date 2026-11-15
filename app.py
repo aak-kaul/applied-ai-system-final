@@ -1,4 +1,4 @@
-"""PawPal+ Streamlit UI -- a thin client over pawpal_system.py.
+"""PawPal+ Streamlit UI -- a thin client over pawpal_system.py and the Care Coach (care_coach/).
 
 Run with:  streamlit run app.py
 """
@@ -8,6 +8,8 @@ from datetime import date, time
 
 import streamlit as st
 
+from care_coach.explain import template_explanation
+from care_coach.planner import CareCoach, apply_plan
 from pawpal_system import (
     CATEGORIES,
     CATEGORY_EMOJI,
@@ -172,6 +174,86 @@ with st.form("add_pet", clear_on_submit=True):
                 st.rerun()
             except ValueError as error:
                 st.error(str(error))
+
+st.divider()
+
+# --------------------------------------------------------------------------- #
+# Care Coach (Project 4): describe a pet in plain English, review a cited plan, approve it
+# --------------------------------------------------------------------------- #
+
+
+@st.cache_resource
+def get_coach() -> CareCoach:
+    """Load the knowledge base once per server process."""
+    return CareCoach()
+
+
+st.subheader("🧠 Care Coach")
+st.caption(
+    "Describe your pet and when you're free. The coach looks up care guidance, drafts a schedule, checks its own work "
+    "and shows where each task came from. Nothing is added until you approve it."
+)
+coach_text = st.text_area(
+    "Tell the coach about your pet",
+    value="Mochi is a 10-week-old puppy.",
+    height=80,
+)
+cc1, cc2 = st.columns([1, 2])
+coach_day = cc1.date_input("Plan for day", value=date.today(), key="coach_day")
+use_notes = cc2.checkbox("Use my own pet notes from knowledge/custom/ (e.g. vet advice)", value=True)
+
+if st.button("Draft a plan"):
+    st.session_state.coach_plan = get_coach().plan(coach_text, owner=owner, day=coach_day, use_custom=use_notes)
+
+plan = st.session_state.get("coach_plan")
+if plan is not None:
+    if plan.status == "escalate":
+        st.error(plan.message)
+    elif plan.status == "refused":
+        st.warning(plan.message)
+    elif plan.status == "clarify":
+        st.info(plan.message)
+    else:
+        banner = st.success if plan.status == "ok" else st.warning
+        banner(f"{plan.message}  Confidence {plan.confidence:.0%}.")
+        for note in plan.notices + plan.request.assumptions:
+            st.caption("• " + note)
+        st.table(
+            [
+                {
+                    "Time": f"{i.start}-{i.end}",
+                    "Pet": i.pet_name,
+                    "Task": f"{CATEGORY_EMOJI[i.category]} {i.title}",
+                    "Who": i.caregiver,
+                    "Why / source": f"{i.citation}",
+                }
+                for i in plan.scheduled_items
+            ]
+        )
+        for i in plan.unscheduled_items:
+            st.warning(f"Could not place '{i.title}': {i.problem}")
+        for tip in plan.advice:
+            st.info(tip)
+        with st.expander("Why this plan? (sources)"):
+            st.text(template_explanation(plan))
+        with st.expander("How the coach checked its work"):
+            st.write(f"Revision rounds: {plan.rounds}")
+            for line in plan.critique_log or ["The first draft passed every check."]:
+                st.write("• " + line)
+            st.code("\n".join(plan.trace))
+        a1, a2 = st.columns(2)
+        if a1.button("✅ Approve and add to my schedule"):
+            result = apply_plan(plan, owner)
+            autosave()
+            st.session_state.coach_plan = None
+            st.session_state.coach_flash = f"Added {len(result.added)} task(s); skipped {len(result.skipped)} already scheduled."
+            st.rerun()
+        if a2.button("🗑️ Discard this plan"):
+            st.session_state.coach_plan = None
+            st.rerun()
+
+if st.session_state.get("coach_flash"):
+    st.success(st.session_state.pop("coach_flash"))
 
 st.divider()
 
